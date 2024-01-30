@@ -1,3 +1,7 @@
+/*
+Maneja la escritura y lectura de la tarjeta SD
+*/
+
 #ifndef SDCARD_
 #define SDCARD_
 
@@ -5,7 +9,6 @@
 #include "SD.h"
 #include "SPI.h"
 #include "FS.h"
-
 #include "global_var.h"
 
 // Micro SD conexiones

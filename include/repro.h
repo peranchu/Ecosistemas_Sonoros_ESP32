@@ -1,3 +1,8 @@
+/*
+Configuracón i2s para la reproducción librería AudioTools
+Amplificador i2s max98357A
+*/
+
 #ifndef REPRO_
 #define REPRO_
 
@@ -19,8 +24,9 @@ I2SStream i2s_play;
 VolumeStream Vol_play (i2s_play);
 WAVDecoder decoder;
 AudioPlayer player(source, Vol_play, decoder);
+//////////////////////////////////////////////
 
-
+//Configuración i2s Reproductor
 void config_i2s_play()
 {
     auto cfg_play = i2s_play.defaultConfig(TX_MODE);
@@ -39,18 +45,20 @@ void config_i2s_play()
     cfg_vol.sample_rate = 44100;
     cfg_vol.bits_per_sample = 16;
     cfg_vol.channels = 1;
-    cfg_vol.allow_boost = true;
+    cfg_vol.allow_boost = true; //permite aumentar el volumen por encima de 1.0
     Vol_play.begin(cfg_vol);
     Vol_play.setVolume(2.0);
 }
+//////////////// FIN CONFIGURACIÓN I2S REPRODUCTOR ///////////////
 
+//Reproducción
 void Reproducir()
 {
-    if (!playing)
+    if (!playing) //Si no ha empezado a reproducir...
     {
         Serial.println("Config Play");
 
-        config_i2s_play();
+        config_i2s_play();  //configuración i2s Reproductor
 
         player.begin();
         player.setVolume(1.0);
@@ -60,7 +68,7 @@ void Reproducir()
 
         Led_Play();
     }
-    if (!player)
+    if (!player)  //Si ha terminado la reproducción...
     {
         FinRepro = 1;
 
@@ -71,7 +79,6 @@ void Reproducir()
         playing = false;
         Serial.println("Stop PLAY");
         
-
         deleteFile(SD, "/record.wav"); // Borra el archivo guardado anteriormente
 
         leds.clear();
@@ -83,6 +90,5 @@ void Reproducir()
     }
 }
 ////////////////////////////////////
-
 
 #endif

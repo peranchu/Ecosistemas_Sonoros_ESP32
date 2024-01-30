@@ -1,3 +1,6 @@
+/*
+Variables globales usadas por el sistema
+*/
 #ifndef GLOBAL_
 #define GLOBAL_
 
@@ -25,15 +28,6 @@ enum class EstadoSistema : uint8_t{
 };
 
 static EstadoSistema currState = EstadoSistema::INICIO;
-
-
-//Limpia el driver i2s
-void clear_i2s_driver(){
-  //we need to clear the driver 
-  i2s_driver_uninstall(I2S_PORT);
-  //i2s_set_pin(I2S_PORT, NULL);  
-}
-/////////////////////////////////
-
+///////////////////////////////
 
 #endif

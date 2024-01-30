@@ -1,3 +1,8 @@
+/*
+Configuración protocolo i2s para grabación de audio a través
+del micrófono INMP441, utilizando la libreria AudioTools
+*/
+
 #ifndef GRABACION_
 #define GRABACION_
 
@@ -7,17 +12,17 @@
 #include "global_var.h"
 
 I2SStream i2s_rec;
-EncodedAudioStream encoder(&file, new WAVEncoder());
-VolumeStream gain(encoder);
+EncodedAudioStream encoder(&file, new WAVEncoder());   // Salvar como WAV
+VolumeStream gain(encoder);                           //Ganancia Micrófono
 FormatConverterStream conv(gain);
 
 StreamCopy copier_rec(conv, i2s_rec);
 
 AudioInfo from(44100, 1, 32);
 AudioInfo to(44100, 1, 16);
+/////////////////////////////////////////
 
-
-// Configuración grabación
+//Configuración grabación
 void config_i2s_Rec()
 {
   auto cfg_rec = i2s_rec.defaultConfig(RX_MODE);
@@ -31,7 +36,7 @@ void config_i2s_Rec()
 
   i2s_rec.begin(cfg_rec);
 
-  // Configuracion encoder
+  //Configuracion encoder
   auto cfg_out = encoder.defaultConfig();
   cfg_out.bits_per_sample = 16;
   cfg_out.channels = 1;
@@ -39,10 +44,10 @@ void config_i2s_Rec()
 
   encoder.begin(cfg_out);
 
-  // Convierte de 32 a 16 bits para la lectura
+  //Convierte de 32 a 16 bits para la lectura
   conv.begin(from, to);
 
-  // Ganancia Micrófono
+  //Ganancia Micrófono
   auto gain_cfg = gain.defaultConfig();
   gain_cfg.sample_rate = 44100;
   gain_cfg.channels = 1;
@@ -53,6 +58,7 @@ void config_i2s_Rec()
 }
 ///////////// FIN CONFIGURACIÓN GRABACIÓN /////////////////////////////
 
+//Función Grabación
 void i2s_record()
 {
   if (!recording)
@@ -64,7 +70,7 @@ void i2s_record()
 
     file = SD.open("/record.wav", FILE_WRITE);
 
-    config_i2s_Rec();
+    config_i2s_Rec();  //Llama a la configuración del i2s
 
     copier_rec.begin(conv, i2s_rec);
 
@@ -76,13 +82,14 @@ void i2s_record()
   }
   copier_rec.copy();
 }
+///////////////// FIN FUNCIÓN GRABACIÓN ////////////////
 
-// Final grabación
+//Final grabación, se ejecuta cuando termina la grababción
 void EndRecord()
 {
   file.close();
 
-  // Cierra estancias i2s
+  //Cierra estancias i2s
   i2s_rec.end();
   encoder.end();
   gain.end();

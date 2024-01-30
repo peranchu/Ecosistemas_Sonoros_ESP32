@@ -1,6 +1,7 @@
 /*
   ECOSISTEMAS POÉTICO SONOROS
-  Honorino Garcia Enero 2024
+  Honorino Garcia Enero 2024.
+  Esp32 y Modulos independientes de Sd card, max98357A, mic 12s inmp441.
 */
 
 #include <Arduino.h>
@@ -26,9 +27,9 @@ Task tarea_pausa(10, TASK_FOREVER, &TareaPausa);
 Task tarea_play(10, TASK_FOREVER, &TareaPlay);
 
 //Temnporizadores
-Task tarea_temp_ini(1000, 7, &TempIni);
-Task tarea_temp_pau(1000, 7, &TempPausa);
-Task tarea_temp_rec(1000, 20, &TempRec);
+Task tarea_temp_ini(1000, 7, &TempIni);     //Temp inicio 7 veces cada segundo.
+Task tarea_temp_pau(1000, 7, &TempPausa);  //Temporizador Pausa.
+Task tarea_temp_rec(1000, 20, &TempRec);   //Temporizador para tiempo de grabación 20 segundos.
 
 Scheduler organizador;
 
@@ -48,7 +49,7 @@ void setup()
 
   randomSeed(analogRead(34));
 
-  t_espera_rand = random(5, 35);
+  t_espera_rand = random(5, 35); //Número aleatorio espera segundos
 
   //Añade las tareas
   organizador.addTask(tarea_inicio);
@@ -68,8 +69,10 @@ void loop()
 {
   organizador.execute();
 }
+///////////////
 
-/////////////////////////////////////////
+
+////////////// TAREAS ///////////////////////
 //Tarea Inicio
 void TareaInicio(){
   switch (currState)
@@ -78,7 +81,7 @@ void TareaInicio(){
     if(StateTempPausa == 0){
       Serial.println("Sistema en Inicio");
       StateTempPausa = 1;
-      organizador.addTask(tarea_temp_ini);
+      organizador.addTask(tarea_temp_ini);  //inicio Temporizador
       tarea_temp_ini.enable();
       tarea_temp_ini.setIterations(t_espera_rand);
     }
@@ -97,7 +100,7 @@ void TareaRecord(){
       Serial.println("Estado Grabacion");
       StateTempRec = 1;
       organizador.addTask(tarea_temp_rec);
-      tarea_temp_rec.restartDelayed();
+      tarea_temp_rec.restartDelayed();  //necesario reiniciar la cuenta de los temporizadores
       tarea_temp_rec.enable();
     }
     i2s_record();
@@ -122,7 +125,7 @@ void TareaPausa(){
     break;
   }
 }
-/////////////
+///////// FIN TAREA PAUSA //////////////////
 
 //Tarea Play
 void TareaPlay(){
@@ -148,7 +151,7 @@ void TareaPlay(){
     break;
   }
 }
-
+///////////////// FIN TAREA PLAY ///////////////////
 
 //Temporizadores///////////////////////
 //Temp Inicio
@@ -166,7 +169,7 @@ void TempIni(){
     tarea_record.enable();
   }
 }
-/////////////////
+////////// FIN TEMPORIZADOR INICIO ////////////////
 
 //Temp Grabación
 void TempRec(){
@@ -185,7 +188,7 @@ void TempRec(){
     tarea_pausa.enable();
   }
 }
-//////////////////////////////////
+////////// FIN TEMPORIZADOR GRABACIÓN /////////////////
 
 //Temp Pausa
 void TempPausa(){

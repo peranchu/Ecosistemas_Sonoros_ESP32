@@ -1,7 +1,10 @@
+/*
+Control y funciones led ws2812b Libreria
+Adafruit Neopixel
+*/
+
 #ifndef LED_
 #define LED_
- 
- //Control LED Librería Adafruit Neopixel
 
  #include <Adafruit_NeoPixel.h>
 
@@ -24,7 +27,7 @@ void inicioLEDS(){
     leds.clear();
 
     for(int i = 0; i < NUM_LEDS; i++){
-        leds.setPixelColor(i, leds.Color(0, 0, 255));
+        leds.setPixelColor(i, leds.Color(0, 0, 255));  //Azul
         leds.show();
         delay(300);
     }
@@ -42,7 +45,7 @@ void inicioLEDS(){
 //Estado LED Grabación
 void Led_Record(){
     leds.setBrightness(180);
-    leds.fill(leds.Color(255, 0, 0), 0, 4);
+    leds.fill(leds.Color(255, 0, 0), 0, 4);  //Rojo
     leds.show();
 }
 ///////// FIN ESTADO GRABACIÓN //////////////
@@ -50,15 +53,15 @@ void Led_Record(){
 //Estado LED PLAY
 void Led_Play(){
     leds.setBrightness(180);
-    leds.fill(leds.Color(0, 255, 0), 0, 4);
+    leds.fill(leds.Color(0, 255, 0), 0, 4);  //verde
     leds.show();
 }
 //////////// FIN ESTADO PLAY ////////////////
 
 //Estado LED Espera
 void Led_Espera(){
-    leds.fill(leds.Color(255, 0, 255), 0, 4);
-    brillo = exp((sin(millis() / 2000.0 * PI)) - 0.36787944) * 108.0;
+    leds.fill(leds.Color(255, 0, 255), 0, 4); //magenta
+    brillo = exp((sin(millis() / 2000.0 * PI)) - 0.36787944) * 108.0; //funcion latido
     leds.setBrightness(brillo);
     leds.show();
 }
